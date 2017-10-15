@@ -10,44 +10,41 @@ CREATE USER has_many_user;
 
 -- 1. Create a new database named `has_many_blogs` owned by `has_many_user`
 
-CREATE DATABASE has_many_blogs
-OWNER has_many_user;
+CREATE DATABASE has_many_blogs WITH OWNER has_many_user;
 
  \c has_many_blogs;
 -- 1. Before each create table statement, add a drop table if exists statement.
 -- 1. In `has_many_blogs.sql` Create the tables (including any PKs, Indexes, and Constraints that you may need) to fulfill the requirements of the **has_many_blogs schema** below.
 
-DROP TABLE IF EXISTS users, posts, comments;
-
 
 CREATE TABLE users (
-id            serial        not null    PRIMARY KEY,
-username      varchar(90)   null        default null,
-first_name    varchar(90)   null        default null,
-last_name     varchar(90)   null        default null,
-created_at    timestamptz   not null    DEFAULT now(),
-updated_at    timestamptz   not null    DEFAULT now()
+  id SERIAL PRIMARY KEY,
+  username character varying(90),
+  first_name character varying(90),
+  last_name character varying(90),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
 
 -- DROP TABLE IF EXISTS posts;
 CREATE TABLE posts (
-id            serial        not null    PRIMARY KEY,
-title         varchar(180)  null        default null,
-url           varchar(510)  null        default null,
-content       text          null        default null,
-created_at    timestamptz   not null    DEFAULT now(),
-updated_at    timestamptz   not null    DEFAULT now(),
-user_id       serial        references  users(id)
+  id SERIAL PRIMARY KEY,
+  title character varying(180),
+  url character varying(510),
+  content text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  user_id INTEGER references users (id)
 );
 
 -- DROP TABLE IF EXISTS comments;
 CREATE TABLE comments (
-id            serial        not null    PRIMARY KEY,
-body          varchar(510)  null        DEFAULT null,
-created_at    timestamptz   not null    DEFAULT now(),
-updated_at    timestamptz   not null    DEFAULT now(),
-post_id       serial        references  posts(id),
-user_id       serial        references  users(id)
+  id SERIAL PRIMARY KEY,
+  body character varying(510),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  user_id INTEGER references users (id),
+  post_id INTEGER references posts (id)
 );
 
 -- -- -- 1. Create the necessary FKs needed to relate the tables according to the **relationship table** below.
